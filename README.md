@@ -23,7 +23,7 @@ The goals / steps of this project are the following:
 
 ### Writeup / README
 
-You're reading it!
+You're reading it! The code of the whole project except camera calibration is available in [Pipeline.ipynb](Pipeline.ipynb).
 
 ### Camera Calibration
 
@@ -87,41 +87,84 @@ This gave me some idea about which color shows up on which space. Additionally, 
 </p>
 The performance of Sobel DIR was somehow not good (or maybe I was not able to use it correctly)
 
+Post color spaces and Sobel operations, the lanes looked like the picture shown below. 
+<p align="center">
+  <img src="output_images/color_binary.png">
+  <br>
+  <b>Combined</b>
+</p>
+
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+At the beginning of the section I was planning to tackle the challenge and harder challenge videos as well.. :) While I didnt eventually get around to doing those, my transform has the potential to select different lengths of the road ahead. The second cell has the relevant details. Reproducing here as well. 
 
 ```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+    src = np.zeros((4, 2), dtype=np.float32)
+    
+    if SPEED == 0: # High speed - longer view
+        # Long
+        src[0] = [610,440]
+        src[1] = [670,440]
+        src[2] = [1130,720]
+        src[3] = [190,720]
+    elif SPEED == 1:
+        # Medium
+        src[0] = [560,460]
+        src[1] = [720,460]
+        src[2] = [1230,720]
+        src[3] = [50,720]
+    elif SPEED == 2:      
+        #Short
+        src[0] = [480,500]
+        src[1] = [800,500]
+        src[2] = [1230,720]
+        src[3] = [50,720]
+    
+    # Destination Points
+    dst = np.zeros((4, 2), dtype=np.float32)
+    width = img.shape[1]
+    height = img.shape[0]
+    offset1 = 250 # offset for dst points
+    offset2 = 150
+    dst[0] = (offset1, 0)
+    dst[1] = (width-offset1, 0)
+    dst[2] = (width-offset1, height)
+    dst[3] = (offset1, height)
 ```
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 560, 460      | 250, 0        | 
+| 720, 460      | 1030, 0       |
+| 1230, 720     | 1030, 720     |
+| 50, 720       | 250, 0        |
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image. The `medium` value was finally used.
 
-![alt text][image4]
+<p align="center">
+  <img src="output_images/birds_eye1.png">
+  <br>
+  <b>Birds Eye View - Straight Road (Short, Long Perspective)</b>
+</p>
+
+<p align="center">
+  <img src="output_images/birds_eye2.png">
+  <br>
+  <b>Birds Eye View - Curved Section (Short, Long Perspective)</b>
+</p>
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+I used the Udacity course recommended lane line pixel finding technique in the function `find_lane_pixels_no_history`. I modified it to a) find the vehicle offset and b) to increase the size of the window when there is no data found and c) include a confidence value on the lane identification. I expanded the window to handle the curved dashed lines which would otherwise go out of scope. The confidence value tells how many of the 9 windows actually had significant data. This proved extremely valuable later on.
 
-![alt text][image5]
+<p align="center">
+  <img src="output_images/polynomial.png">
+  <br>
+  <b>Polynomial Fitted Lane with confidence values(both perspectives)</b>
+</p>
+
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
