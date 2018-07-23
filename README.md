@@ -179,7 +179,7 @@ The output looked like this,
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-In the `process_images` function the lanes were plotted back on the road using Udacity's code. :) 
+In the `process_images` function the lanes were plotted back on the road using Udacity's help. :) 
 <p align="center">
   <img src="output_images/lane_area.png">
   <br>
@@ -193,7 +193,7 @@ In the `process_images` function the lanes were plotted back on the road using U
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output.mp4)
 
 ---
 
@@ -202,3 +202,13 @@ Here's a [link to my video result](./project_video.mp4)
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
+**Challenges:**
+* Identifying which color channels to choose, the thresholds, the Sobel operators and final combination
+* The medium distance worked well while changing the perspective. The short distance might come in handy for the harder challenge. 
+
+**Improvements:**
+* Currently I am rescanning the images with every iteration. I should use the faster zone identification based on earlier location
+* Improve selection of color spaces/channels as the challenge video is throwing up more lines in the binary threshold
+* Improve validation of lines (especially when you have high confidence on either left or right lane)
+* Use the shorter perspective for the harder challenge video
