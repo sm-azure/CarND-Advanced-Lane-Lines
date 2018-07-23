@@ -29,7 +29,7 @@ You're reading it!
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the file `Calibrate_Camera.ipynb` and `Validate_Calibration.ipynb`
+The code for this step is contained in the file [Calibrate_Camera.ipynb](Calibrate_Camera.ipynb) and [Validate_Calibration.ipynb](Validate_Calibration.ipynb)
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -46,13 +46,46 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 #### 1. Provide an example of a distortion-corrected image.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+<p align="center">
+  <img src="output_images/correction.png">
+  <br>
+  <b>Distortion Corrected Image</b>
+</p>
+
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+Initially I was doing the transforms and then the perspective transform. But then I realized that it is easier to the perspective transform and then to the color transforms. 
 
-![alt text][image3]
+I first explored a couple of color spaces and tried to identify which channels to select. 
+<p align="center">
+  <img src="output_images/RGB.png">
+  <br>
+  <b>RGB</b>
+</p>
+<p align="center">
+  <img src="output_images/HLS.png">
+  <br>
+  <b>HLS</b>
+</p>
+<p align="center">
+  <img src="output_images/LUV.png">
+  <br>
+  <b>LUV</b>
+</p>
+<p align="center">
+  <img src="output_images/LAB.png">
+  <br>
+  <b>LAB</b>
+</p>
+
+This gave me some idea about which color shows up on which space. Additionally, I also had to use the Sobel operator to get additional results. 
+<p align="center">
+  <img src="output_images/sobel.png">
+  <br>
+  <b>Sobel Grad X and Mag</b>
+</p>
+The performance of Sobel DIR was somehow not good (or maybe I was not able to use it correctly)
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
