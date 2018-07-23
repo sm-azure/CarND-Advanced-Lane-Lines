@@ -168,13 +168,24 @@ I used the Udacity course recommended lane line pixel finding technique in the f
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+The radius of curvature was identified in the function `measure_curvature_real`. The xm_per_pix and ym_per_pixel values were calculated on the birds eye view images for both perspectives. The position of the vehicle wrt the center was calculated in the `find_lane_pixels_no_history` function. 
+
+The output looked like this, 
+<p align="center">
+  <img src="output_images/radius_offset.png">
+  <br>
+  <b>Radius and Offset</b>
+</p>
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+In the `process_images` function the lanes were plotted back on the road using Udacity's code. :) 
+<p align="center">
+  <img src="output_images/lane_area.png">
+  <br>
+  <b>Lane Identification</b>
+</p>
 
-![alt text][image6]
 
 ---
 
