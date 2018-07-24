@@ -181,7 +181,7 @@ The output looked like this,
 
 In the `process_images` function the lanes were plotted back on the road using Udacity's help. :) 
 <p align="center">
-  <img src="output_images/lane_area1.png">
+  <img src="output_images/lane_area.png">
   <br>
   <b>Lane Identification</b>
 </p>
